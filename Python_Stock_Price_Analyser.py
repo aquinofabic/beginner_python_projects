@@ -40,7 +40,7 @@ for x in range(prediction_days, len(scaled_data)):
 
 x_train, y_train = np.array(x_train), np.array(y_train)
 # now reshape x_train so it fits with the scaler in the neural network
-x_train = np.reshape(x_train, (x_train.shape[0], (x_train[1], 1))  # add one additional dimension, 1
+x_train = np.reshape(x_train, (x_train.shape[0], (x_train[1], 1)))  # add one additional dimension, 1
 
 # 3. Build The Model
 model = Sequential()
@@ -69,7 +69,7 @@ actual_prices = test_data['Close'].values
 
 total_dataset = pd.concat((data['Close'],test_data['Close']), axis = 0)
 
-model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:)].values
+model_inputs = total_dataset[len(total_dataset) - len(test_data) - prediction_days:].values
 model_inputs = model_inputs.reshape(-1,1)
 model_inputs = scaler.transform(model_inputs)
 
