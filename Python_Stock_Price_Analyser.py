@@ -10,10 +10,10 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, LSTM
 
 # 1. Load Data
-company = 'FB'
+company = 'TSLA'
 
-start = dt.datetime(2022,1,1)
-end = dt.datetime(2023,1,1)
+start = dt.datetime(2012,1,1)
+end = dt.datetime(2020,1,1)
 
 data = web.DataReader(company, 'yahoo', start, end)
 # Using yahoo finance API from start to end date
@@ -87,3 +87,13 @@ predicted_prices = model.predict(x_test)
 predicted_prices = scaler.inverse_transform(predicted_prices)
 
 # 19.48s
+
+#  6. Plot The Test Predictions
+plt.plot(actual_prices, color = "black", label = f"Actual {company} Price")
+plt.plot(predicted_prices, color = "green", label = f"Predicted {company} Price")
+plt.title(f"{company} Share Price")
+plt.xlabel("Time")
+plt.ylabel(f"{company} Share Price")
+plt.legend()
+plt.show()
+
