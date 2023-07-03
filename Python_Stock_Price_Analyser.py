@@ -1,8 +1,9 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
-import pandas_datareader as web
+from pandas_datareader import data as web
 import datetime as dt
+import yfinance as yfin
 # Install these on command line: pip install numpy, ...
 
 from sklearn.preprocessing import MinMaxScaler
@@ -12,11 +13,16 @@ from tensorflow.keras.layers import Dense, Dropout, LSTM
 # 1. Load Data
 company = 'TSLA'
 
-start = dt.datetime(2012,1,1)
-end = dt.datetime(2020,1,1)
+# start = dt.datetime(2012,1,1)
+# end = dt.datetime(2020,1,1)
+# print(start,end)
 
-data = web.DataReader(company, 'yahoo', start, end)
+# data = web.DataReader(company, start, end)
 # Using yahoo finance API from start to end date
+
+yfin.pdr_override()
+data = web.get_data_yahoo(company, start = '2022-10-24', end = '2022-12-23')
+print(data)
 
 # 2. Prepare Data
 # Scale down all values to fit between 0 and 1
@@ -40,7 +46,7 @@ for x in range(prediction_days, len(scaled_data)):
 
 x_train, y_train = np.array(x_train), np.array(y_train)
 # now reshape x_train so it fits with the scaler in the neural network
-x_train = np.reshape(x_train, (x_train.shape[0], (x_train[1], 1)))  # add one additional dimension, 1
+x_train = np.reshape(x_train, (x_train.shape[0], 1))  # add one additional dimension, 1
 
 # 3. Build The Model
 model = Sequential()
@@ -61,10 +67,10 @@ model.fit(x_train, y_train, epochs = 25, batch_size = 32)
 """ Test The Model Accuracy on Existing Data """
 
 # 4. Load Test Data
-test_start = dt.datetime(2022,1,1)
-test_end = dt.datetime.now()
+# test_start = dt.datetime(2022,1,1)
+# test_end = dt.datetime.now()
 
-test_data = web.DataReader(company, 'yahoo', test_start, test_end)
+test_data = web.DataReader(company, 'yahoo', test_start = '2022-01-01', test_end = '2023-06-10')
 actual_prices = test_data['Close'].values
 
 total_dataset = pd.concat((data['Close'],test_data['Close']), axis = 0)
@@ -97,3 +103,16 @@ plt.ylabel(f"{company} Share Price")
 plt.legend()
 plt.show()
 
+
+# 7.0 Machine learning through neural networking
+
+real_data = model_inputs[len(model_inputs) + 1 - prediction_days:len(model_inputs + 1, 0)]  # :prediction days up until : len...
+real_data = np.array(real_data)
+real_data = np.reshape(real_data, (real_data.shape[0], real_data.shape[1], 1))
+# np.reshape real data, into the format of (real_data.shape into 3 dimensions))
+
+print(scaler.inverse_transform(real_data[-1]))
+
+prediction = model.predict(real_data)
+prediction = scaler.inverse_transform(prediction)
+print(f"Prediction: {prediction}")
