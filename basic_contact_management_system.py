@@ -17,7 +17,7 @@ def display_contact():
         print("{}\t\t{}".format(key,contact.get(key)))  # {} placeholders for displaying name and contact n.o, .format() formats specific
         # values and inserts those into placeholders
 
-while True:
+while True:  # means repeats forever
     choice = int(input("1. Add new contact \n2. Search contact\n3. Display contact\n4. Edit contact "
                        "\n5. Delete Contact \nEnter your choice "))# \n is new line
     if choice == 1:
